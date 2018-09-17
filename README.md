@@ -3,6 +3,8 @@ Cheatsheet and basic concepts about Kubernetes (Including KOPS and Helm)
 
 ## Kubectl
 
+Install kubectl at Amazon Linux2 AMI (RedHat based): https://github.com/pulpbill/daily-bash-scripts/blob/master/kubectl.sh
+
 Create env from file:
 ```
 kubectl create -f myfile.yaml
