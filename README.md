@@ -174,6 +174,23 @@ Optional, run this and should Tiller's pod running at kube-system namespace:
 kubectl get pods --namespace kube-system
 ```
 
+### Charts:
+
+Once you have everything set up, go look for a chart to test on your K8s cluster (IE: Kibana):
+```
+helm search | grep kibana
+```
+Install a chart:
+```
+helm install stable/kibana --name kibana-stable
+```
+Delete a chart:
+```
+helm delete kibana-stable
+```
+#### Note:
+I picked the release name passing --name kibana-stable Otherwise, Helm would have picked one for us.
+
 In case of tiller issues: http://zero-to-jupyterhub.readthedocs.io/en/latest/setup-helm.html
 
 Reference:
