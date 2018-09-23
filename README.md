@@ -142,7 +142,7 @@ Execute rolling-update with the --yes parameter and your master instance size sh
 ```
 kops rolling-update --yes
 ```
-## HELM
+## HELM / Tiller
 
 Install Helm (I'll create a script for this):
 ```
@@ -150,20 +150,28 @@ wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.
 tar -zxvf helm-v2.9.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/
 ```
 
-While using helm, don’t forget to initialize tiller:
+Create Tiller serviceaccount:
+```
+kubectl --namespace kube-system create serviceaccount tiller 
+```
+
+Bind the tiller serviceaccount to the Kubernetes cluster-admin role:
+```
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+```
+
+Install Tiller in your Kubernetes cluster:
 ```
 helm init --service-account tiller
 ```
 
-In case of tiller issues: http://zero-to-jupyterhub.readthedocs.io/en/latest/setup-helm.html
+Optional, run this and should Tiller's pod running at kube-system namespace:
 ```
-kubectl --namespace kube-system create serviceaccount tiller
+kubectl get pods --namespace kube-system
 ```
 
-Create cluster role binding for tiller:
-```
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-```
+In case of tiller issues: http://zero-to-jupyterhub.readthedocs.io/en/latest/setup-helm.html
+
 Reference:
 
 https://github.com/helm/helm/blob/master/docs/rbac.md
