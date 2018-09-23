@@ -115,7 +115,7 @@ kops create cluster --node-count=2 --node-size=t2.small --node-volume-size=8 --m
  
  #### Note:
 
-I had an issue last week (mid sept. 2018) where the cluster failed, turns out that, I don't know why (didn't have the time to get into that) I use t2.micro/nano because I'm just doing some tests, and after changing node/master size to t2.small, worked.
+I had an issue last week (mid sept. 2018) where the cluster failed, I don't know why (didn't have the time to get into that) I use t2.micro/nano because I'm just doing some tests, and after changing node/master size to t2.small, worked.
  
 5. Create the cluster (it only adds --yes to the previous command (that's why I called it dry run)):
 ```
