@@ -103,19 +103,28 @@ mv kops-linux-amd64 /usr/local/bin/kops
 
 2. Delegate authority for the subdomain you choose (get your subdomain nameservers and add a NS record to the parent hosted zone that contains these 4 ns records so it can know where to resolve your subdomain).
 
-3. Create a S3 bucket so Kops can manage files:
+3. Create a S3 bucket and set the env var so Kops can manage files:
 ```
 export KOPS_STATE_STORE=s3://your-bucket
 ```
 
 4. Create cluster configuration (it's like a dry-run):
 ```
-kops create cluster --node-count=2 --node-size=t2.micro --node-volume-size=8 --master-volume-size=8 --zones=us-east-1a --name=yoursubdomain.example.com --master-size=t2.micro --master-count=1 --dns-zone=yoursubdomain.example.com --ssh-public-key=~/.ssh/yourkey.pub
+kops create cluster --node-count=2 --node-size=t2.small --node-volume-size=8 --master-volume-size=8 --zones=us-east-1a --name=yoursubdomain.example.com --master-size=t2.small --master-count=1 --dns-zone=yoursubdomain.example.com --ssh-public-key=~/.ssh/yourkey.pub
 ```
  
-5. Create the cluster (it only adds --yes to the previous command):
+ #### Note:
+
+I had an issue last week (mid sept. 2018) where the cluster failed, turns out that, I don't know why (didn't have the time to get into that) I use t2.micro/nano because I'm just doing some tests, and after changing node/master size to t2.small, worked.
+ 
+5. Create the cluster (it only adds --yes to the previous command (that's why I called it dry run)):
 ```
 kops update cluster yoursubdomain.example.com --yes
+```
+
+Optional: Check every 5s the status of the cluster creation:
+```
+watch -n 5 kops validate cluster
 ```
 
 #### Edit the cluster with Kops  (ig stands for instance group):
