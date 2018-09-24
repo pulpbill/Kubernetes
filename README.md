@@ -188,6 +188,10 @@ Delete a chart:
 ```
 helm delete kibana-stable
 ```
+Test a chart with debug:
+```
+helm install --dry-run --debug mychart
+```
 #### Note:
 I picked the release name passing --name kibana-stable Otherwise, Helm would have picked one for us.
 
