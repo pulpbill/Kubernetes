@@ -61,4 +61,9 @@ You can package your chart to a tar.gz file:
 helm package <your-chart>
 ```
 
+This command helps you find issues with your chart’s formatting or information:
+```
+helm lint <your-chart>
+```
+
 Source: https://medium.com/containerum/how-to-make-and-share-your-own-helm-package-50ae40f6c221
