@@ -91,7 +91,7 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 Creating a K8s cluster with kops:
 
-I have a user with S3/R53/EC2/VPC/IAM admin access and created a set of keys.
+I have a user (AWS user created via IAM) with S3/R53/EC2/VPC/IAM admin access and created a set of keys.
 
 Create ssh key pairs with ssh-keygen and then set it:
 ```
@@ -107,7 +107,7 @@ mv kops-linux-amd64 /usr/local/bin/kops
 
 2. Delegate authority for the subdomain you choose (get your subdomain nameservers and add a NS record to the parent hosted zone that contains these 4 ns records so it can know where to resolve your subdomain).
 
-3. Create a S3 bucket and set the env var so Kops can manage files:
+3. Create a S3 bucket (at your AWS consola or via CLI) and set the environment variable so Kops can manage files:
 ```
 export KOPS_STATE_STORE=s3://your-bucket
 ```
