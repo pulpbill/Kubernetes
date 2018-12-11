@@ -136,7 +136,7 @@ This will adjust the ig configuration but not the launch configuration at AWS:
 ```
 kops edit ig 
 ```
-Apply these changes on AWS:
+Apply these changes:
 ```
 kops update cluster --yes
 ```
