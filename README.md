@@ -148,10 +148,9 @@ kops rolling-update --yes
 ```
 ## HELM / Tiller
 
-1. Install Helm (I'll create a script for this):
+1. Install Helm:
 ```
-wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && 
-tar -zxvf helm-v2.9.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh && chmod 700 get_helm.sh && ./get_helm.sh
 ```
 
 2. Create Tiller serviceaccount:
