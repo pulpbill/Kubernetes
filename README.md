@@ -171,6 +171,12 @@ Optional, run this and should Tiller's pod running at kube-system namespace:
 kubectl get pods --namespace kube-system
 ```
 
+Bonus track, set up tiller account at once, use it carefully:
+```
+kubectl --namespace kube-system create serviceaccount tiller && kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller && helm init --service-account tiller
+```
+
+
 ### Charts:
 
 Once you have everything set up, go look for a chart to test on your K8s cluster (IE: Kibana):
