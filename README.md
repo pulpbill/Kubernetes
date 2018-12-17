@@ -103,7 +103,7 @@ Add this to a json file:
 ```
 ## KOPS
 
-Creating a K8s cluster with kops:
+### Creating a K8s cluster with kops:
 
 I have a user (AWS user created via IAM) with S3/R53/EC2/VPC/IAM admin access and created a set of keys.
 
