@@ -87,6 +87,20 @@ kubectl get deploy -o json |
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
 
+## Create a K8s namespace (I'll use monitoring as an example):
+Add this to a json file:
+```
+{
+  "kind": "Namespace",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "monitoring",
+    "labels": {
+      "name": "monitoring"
+    }
+  }
+}
+```
 ## KOPS
 
 Creating a K8s cluster with kops:
