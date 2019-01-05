@@ -7,9 +7,9 @@ Cheatsheet and basic concepts about Kubernetes (Including KOPS and Helm)
 
 -Remember to always specify your namespace for most of kubectl commands execution.
 
--Though I use yaml in the examples, kubectl also takes jsons. 
+-Though I use yaml in the examples, kubectl also takes json. 
 
-### Install kubectl at Amazon Linux2 AMI (RedHat based): 
+### Install Kubectl at Amazon Linux2 AMI (RedHat based): 
 
 Use this script: https://github.com/pulpbill/daily-bash-scripts/blob/master/kubectl.sh
 
@@ -35,9 +35,13 @@ Get detailed info about a specific object (I picked pod in this example):
 ```
 kubectl describe pod <your-pod> -n <your-namespace>
 ```
-Check pod logs (IE: to check actual nginx log files inside our container=pod):
+Check pod logs (IE: to check nginx log files inside our container):
 ```
 kubectl logs <pod-ID> -f -n <your-namespace>
+```
+Check container logs for a pod with 2 or more containers (IE: to check node log files inside our container):
+```
+kubectl logs <pod-ID> -f -c node -n <your-namespace>
 ```
 Connect to the shell’s container:
 ```
@@ -105,7 +109,7 @@ Add this to a json file:
 
 ### Creating a K8s cluster with kops:
 
-I have a user (AWS user created via IAM) with S3/R53/EC2/VPC/IAM admin access and created a set of keys.
+I have an user (AWS user created via IAM) with S3/R53/EC2/VPC/IAM admin access and created a set of keys.
 
 Create ssh key pairs with ssh-keygen and then set it:
 ```
@@ -203,7 +207,7 @@ helm install stable/kibana --name kibana-stable
 ```
 Delete a chart:
 ```
-helm delete kibana-stable
+helm delete --purge kibana-stable
 ```
 Test a chart with debug:
 ```
