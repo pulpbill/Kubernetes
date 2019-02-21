@@ -194,6 +194,16 @@ Bonus track, set up tiller account at once, use it carefully:
 kubectl --namespace kube-system create serviceaccount tiller && kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller && helm init --service-account tiller
 ```
 
+What helm init means:
+
+This will validate that helm’s local environment is set up correctly (and set it up if necessary). Then it will connect to whatever cluster kubectl connects to by default (kubectl config view). Once it connects, it will install tiller into the kube-system namespace.
+
+Helm will figure out where to install Tiller by reading your Kubernetes configuration file (usually $HOME/.kube/config). This is the same file that kubectl uses.
+
+If your cluster has Role-Based Access Control (RBAC) enabled, you may want to configure a service account and rules before proceeding.
+
+Refer to: https://docs.helm.sh/using_helm/#role-based-access-control 
+
 
 ### Charts:
 
