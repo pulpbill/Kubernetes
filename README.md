@@ -35,7 +35,7 @@ Get detailed info about a specific object (I picked pod in this example):
 ```
 kubectl describe pod <your-pod> -n <your-namespace>
 ```
-Check pod logs (IE: to check nginx log files inside our container):
+Check pod logs (IE: to check nginx log files inside our container (-f stands for follow, as tail does):
 ```
 kubectl logs <pod-ID> -f -n <your-namespace>
 ```
@@ -63,7 +63,7 @@ Get info of a configmap:
 ```
 kubectl describe cm <configmap-name> -n <your-namespace>
 ```
-Delete:
+Delete a cm:
 ```
 kubectl delete cm <configmap-name> -n <your-namespace>
 ```
