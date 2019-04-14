@@ -15,11 +15,11 @@ Use this script: https://github.com/pulpbill/daily-bash-scripts/blob/master/kube
 
 ### Useful commands: 
 
-Create a resource from file (or STDIN):
+Create an object from file (or STDIN):
 ```
 kubectl create -f myfile.yaml
 ```
-Apply a configuration to a resource (will create if it doesn't exists):
+Apply a configuration to an object (will create if it doesn't exists):
 ```
 kubectl apply -f myfile.yaml
 ```
@@ -27,11 +27,11 @@ List objects:
 ```
 kubectl get <object> -n <your-namespace>
 ```  
-Get detailed info about a kind of objects:
+Get detailed info about an object:
 ```
-kubectl describe <object> -n <your-namespace>
+kubectl describe <object> <object-name> -n <your-namespace>
 ```
-Get detailed info about a specific object (I picked pod in this example):
+Exmaple of object information (I picked pod):
 ```
 kubectl describe pod <your-pod> -n <your-namespace>
 ```
@@ -43,9 +43,13 @@ Check container logs for a pod with 2 or more containers (IE: to check node log 
 ```
 kubectl logs <pod-ID> -f -c node -n <your-namespace>
 ```
-Connect to the shell’s container:
+Connect to shell’s container:
 ```
 kubectl exec -it <pod-ID> <your-containers-shell> -n <your-namespace>
+```
+Connecting to a container example:
+```
+kubectl exec -it <pod-ID> -n <your-namespace> sh
 ```
 Delete (terminate) a pod:
 ```
@@ -53,19 +57,7 @@ kubectl delete pod <pod-ID> -n <your-namespace>
 ```
 Edit an object:
 ```
-kubectl edit pod/<pod-ID> -n <your-namespace>
-```
-Create a configmap:
-```
-kubectl create configmap <cm-name> --from-file=<my-folder> -n <your-namespace>
-```
-Get info of a configmap:
-```
-kubectl describe cm <configmap-name> -n <your-namespace>
-```
-Delete a cm:
-```
-kubectl delete cm <configmap-name> -n <your-namespace>
+kubectl edit <object> <object-ID> -n <your-namespace>
 ```
 
 ### Advanced commands:
@@ -92,19 +84,11 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
 
 ## Create a K8s namespace (I'll use monitoring as an example):
-Add this to a json file:
+Run this at your cluster:
 ```
-{
-  "kind": "Namespace",
-  "apiVersion": "v1",
-  "metadata": {
-    "name": "monitoring",
-    "labels": {
-      "name": "monitoring"
-    }
-  }
-}
+kubectl create -f https://raw.github.com/pulpbill/Kubernetes/master/ns-monitoring.yaml
 ```
+
 ## KOPS
 
 ### Creating a K8s cluster with kops:
@@ -123,7 +107,7 @@ curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://
 
 2. Delegate authority for the subdomain you choose (get your subdomain nameservers and add a NS record to the parent hosted zone that contains these 4 ns records so it can know where to resolve your subdomain).
 
-3. Create a S3 bucket (at your AWS consola or via CLI) and set the environment variable so Kops can manage files:
+3. Create a S3 bucket (at your AWS console or via CLI) and set the environment variable so Kops can manage files:
 ```
 export KOPS_STATE_STORE=s3://your-bucket
 ```
@@ -142,9 +126,9 @@ I had an issue last week (mid sept. 2018) where the cluster failed, I don't know
 kops update cluster yoursubdomain.example.com --yes
 ```
 
-Optional: Check every 5s the status of the cluster creation:
+Optional: Check every 1s the status of the cluster creation:
 ```
-watch -n 5 kops validate cluster
+watch -n1 'kops validate cluster'
 ```
 
 #### Edit the cluster with Kops  (ig stands for instance group):
@@ -184,9 +168,9 @@ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceac
 helm init --service-account tiller
 ```
 
-Optional, run this and should Tiller's pod running at kube-system namespace:
+Optional, run this and you should see Tiller's pod running at kube-system namespace:
 ```
-kubectl get pods --namespace kube-system
+kubectl get pods --namespace kube-system | grep tiller
 ```
 
 Bonus track, set up tiller account at once, use it carefully:
