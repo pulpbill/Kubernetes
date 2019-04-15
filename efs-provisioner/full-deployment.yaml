@@ -1,0 +1,146 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: efs-provisioner-runner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: run-efs-provisioner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: efs-provisioner-runner
+subjects:
+- kind: ServiceAccount
+  name: efs-provisioner
+  namespace: kube-logging
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-efs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: efs-provisioner
+    namespace: kube-logging
+roleRef:
+  kind: Role
+  name: leader-locking-efs-provisioner
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: efs-provisioner
+  namespace: kube-logging
+data:
+  file.system.id: <efs-id>
+  aws.region: us-east-1
+  provisioner.name: aws-efs
+  dns.name: "<efs-id>.efs.us-east-1.amazonaws.com"
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: efs-provisioner
+  namespace: kube-logging
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate 
+  template:
+    metadata:
+      labels:
+        app: efs-provisioner
+    spec:
+      containers:
+        - name: efs-provisioner
+          image: quay.io/external_storage/efs-provisioner:latest
+          env:
+            - name: FILE_SYSTEM_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: file.system.id
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: aws.region
+            - name: DNS_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: dns.name
+                  optional: true
+            - name: PROVISIONER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: provisioner.name
+          volumeMounts:
+            - name: pv-efs
+              mountPath: /persistentvolumes
+      volumes:
+        - name: pv-efs
+          nfs:
+            server: <efs-id>.efs.us-east-1.amazonaws.com
+            path: /
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aws-efs
+provisioner: aws-efs
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-efs
+  namespace: kube-logging
+  annotations:
+    kubernetes.io/createdby: aws-efs-dynamic-provisioner
+    pv.kubernetes.io/bound-by-controller: "yes"
+    pv.kubernetes.io/provisioned-by: kubernetes.io/aws-efs
+spec:
+  storageClassName: aws-efs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-efs
+  namespace: kube-logging
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: aws-efs
+  nfs:
+    path: /
+    server: <efs-id>.efs.us-east-1.amazonaws.com
+    readOnly: false
