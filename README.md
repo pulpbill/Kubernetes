@@ -55,9 +55,9 @@ Connecting to a container example:
 ```
 kubectl exec -it <pod-ID> -n <your-namespace> sh
 ```
-Delete (terminate) a pod:
+Delete an object:
 ```
-kubectl delete pod <pod-ID> -n <your-namespace>
+kubectl delete <object> <object-ID> -n <your-namespace>
 ```
 Edit an object:
 ```
