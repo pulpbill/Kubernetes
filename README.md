@@ -1,14 +1,21 @@
-## Kubectl
-
+## Install Kubectl:
+```
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+&& yum install -y kubectl
+```
 ### Important:
 
 -Remember to always specify your namespace for most of kubectl commands execution.
 
 -Though I use yaml in the examples, kubectl also takes json. 
-
-### Install Kubectl at Amazon Linux2 AMI (RedHat based): 
-
-Use this script: https://github.com/pulpbill/daily-bash-scripts/blob/master/kubectl.sh
 
 ### Useful commands: 
 
