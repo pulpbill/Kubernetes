@@ -17,7 +17,7 @@ EOF
 
 -Though I use yaml in the examples, kubectl also takes json. 
 
-### Useful commands: 
+### Managing Kubernetes objects: 
 
 Create an object from file (or STDIN):
 ```
