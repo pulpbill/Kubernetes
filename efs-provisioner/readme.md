@@ -7,4 +7,13 @@ The efs-provisioner allows you to mount EFS storage as PersistentVolumes in kube
 
 . Mount targets and security groups such that any node (in any zone in the cluster's region) can mount the EFS file system by its File system DNS name
 
+Take as a full example: https://github.com/pulpbill/Kubernetes/blob/master/efs-provisioner/full-deployment.yaml 
+
+Replace as needed:
+-namespace
+-paths
+-aws zone
+-names
+-efs-id
+
 Reference: https://github.com/kubernetes-incubator/external-storage/tree/master/aws/efs
